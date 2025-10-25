@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>PayPal Transaction Confirmation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  /* BODY & GLOBAL */
+  body {
+    margin: 0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background-color: #f5f5f7;
+    color: #222222;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .paypal-header {
+    background: #003087;
+    color: white;
+    font-size: 13px;
+    padding: 12px 0;
+    text-align: center;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+  }
+
+  /* CONTAINER LAYOUT */
+  .container {
+    max-width: 500px;
+    margin: 40px auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    padding: 40px 30px 30px;
+  }
+
+  /* LOGO */
+  .logo {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .logo img {
+    height: 40px;
+  }
+
+  /* ANIMATION */
+  .animation-wrapper {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .spinner {
+    border: 6px solid #edf0f3;
+    border-top: 6px solid #0070ba;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .checkmark-circle {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 3.5px solid #1cb064;
+    margin: 0 auto;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: white;
+  }
+
+  .checkmark-circle svg {
+    width: 32px;
+    height: 32px;
+  }
+  .checkmark {
+    stroke-dasharray: 29;
+    stroke-dashoffset: 29;
+    animation: draw 0.45s 0.1s forwards;
+    stroke: #1cb064;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+  }
+  @keyframes draw {
+    to { stroke-dashoffset: 0; }
+  }
+
+  /* MESSAGE */
+  .confirmation-message {
+    font-size: 24px;
+    font-weight: 600;
+    margin-top: 20px;
+    color: #222222;
+    opacity: 0;
+    transition: opacity 0.3s ease-in;
+    text-align: center;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    color: #555;
+    margin-top: 6px;
+    margin-bottom: 40px;
+  }
+
+  /* DETAILS */
+  .transaction-details {
+    display: none;
+    color: #222;
+    font-size: 15px;
+  }
+
+  .details-block {
+    margin-bottom: 22px;
+  }
+
+  .details-block strong {
+    display: block;
+    font-weight: 600;
+    color: #0a47bd;
+    margin-bottom: 4px;
+  }
+  .details-block span {
+    display: block;
+    color: #444444;
+  }
+
+  /* ALERT CARD */
+  .alert-card {
+    background-color: #edeff2;
+    border-left: 5px solid #cc3232;
+    padding: 16px 18px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    color: #6c1b1b;
+    font-size: 14px;
+  }
+  .alert-card strong {
+    font-weight: 700;
+  }
+  .alert-footer {
+    margin-top: 10px;
+    font-weight: 700;
+    color: #0070ba;
+  }
+
+  /* FOOTER */
+  .footer-links {
+    margin-top: 40px;
+    font-size: 14px;
+    text-align: center;
+    color: #0070ba;
+  }
+  .footer-links a {
+    color: #0070ba;
+    text-decoration: none;
+    margin: 0 12px;
+  }
+  .footer {
+    margin: 14px 0 0 0;
+    font-size: 12px;
+    color: #919191;
+    text-align: center;
+  }
+
+  /* RESPONSIVE */
+  @media(max-width: 480px) {
+    .container {
+      margin: 20px 10px;
+      padding: 30px 20px 25px;
+    }
+    .confirmation-message {
+      font-size: 20px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="paypal-header">
+    You're protected by PayPal Purchase Protection. All transactions are monitored 24/7. Help Line: +1 (605) 600-5010
+  </div>
+
+  <div class="container">
+
+    <div class="logo">
+      <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg" alt="PayPal Logo" />
+    </div>
+
+    <div class="animation-wrapper">
+      <div class="spinner" id="spinner"></div>
+      <div class="checkmark-circle" id="checkmarkCircle">
+        <svg viewBox="0 0 32 32">
+          <path class="checkmark" d="M8 16 l6 6 l10 -12" />
+        </svg>
+      </div>
+    </div>
+
+    <div class="confirmation-message" id="confirmationMessage">
+      Transaction Complete
+      <div class="subtitle">Redirecting to transaction details…</div>
+    </div>
+
+    <div class="transaction-details" id="transactionDetails">
+      <div class="alert-card">
+        <strong>&#9888; Note:</strong> This was an automated payment triggered by clicking a <em>Money Request Link</em>.<br />
+        If you did not intend this payment, contact PayPal Billing Support:
+        <div class="alert-footer">+1 803-921-3489</div>
+      </div>
+
+      <div class="details-block">
+        <strong>Why this payment was made:</strong>
+        <span>This payment was completed because you accepted a money request sent by <b>DAVID WILSON</b>.</span>
+        <span>Once a money request is accepted on PayPal, the linked payment method is charged and the funds are automatically transferred to the requesting user.</span>
+        <span>By proceeding, you confirmed the authorization for this payment, and it is now marked as <b>Completed</b> in your transaction history.</span>
+      </div>
+
+      <div class="details-block">
+        <strong>Date:</strong><span>October 25, 2025</span>
+        <strong>Transaction ID:</strong><span>CHG-78345519</span>
+        <strong>Status:</strong><span style="color:#1cb064;width: fit-content;">Completed &#10003;</span>
+        <strong>Payment Method:</strong><span>Linked Debit Card</span>
+        <strong>Confirmation:</strong><span>Email sent to your registered address</span>
+      </div>
+
+      <div class="details-block" style="font-style: italic; color:#a08821;">
+        &#128161; This amount may take up to 24 hours to reflect on your bank statement.
+      </div>
+
+      <div class="details-block" style="color:#bb7f2b;">
+        &#9888; If you want to stop this payment or believe you are a victim of a scam, contact us immediately to report, cancel, and request a refund.
+        <br />
+        <strong>Helpline:</strong> <span>+1 803-921-3489</span>
+      </div>
+
+      <div class="footer-links">
+        <a href="#">Help Center</a>|
+        <a href="#">Privacy Policy</a>|
+        <a href="#">Terms & Conditions</a>
+      </div>
+
+      <div class="footer">
+        &copy; PayPal 2025. All rights reserved.
+      </div>
+    </div>
+  </div>
+
+<script>
+  window.addEventListener('load', () => {
+    const spinner = document.getElementById('spinner');
+    const checkmark = document.getElementById('checkmarkCircle');
+    const confirmMsg = document.getElementById('confirmationMessage');
+    const details = document.getElementById('transactionDetails');
+
+    setTimeout(() => {
+      spinner.style.display = 'none';
+      checkmark.style.display = 'flex';
+      setTimeout(() => {
+        confirmMsg.style.opacity = '1';
+        setTimeout(() => {
+          confirmMsg.style.display = 'none';
+          details.style.display = 'block';
+        }, 1800);
+      }, 600);
+    }, 1500);
+  });
+</script>
+</body>
+</html>
